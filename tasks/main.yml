@@ -1,0 +1,44 @@
+---
+- block:
+  - raw: apt-get update
+  - raw: apt-get install -y python curl
+  ignore_errors: yes
+  tags: ansible_bootstrap
+  when: run_raw
+
+- name: create provision user
+  user:
+    name: '{{ user }}'
+    home: '{{ home }}'
+    generate_ssh_key: yes
+- name: setup sudo
+  template:
+    src: sudoers.j2
+    dest: '/etc/sudoers.d/{{ user }}'
+    owner: root
+    group: root
+    mode: 0440
+- name: show ssh public key to add repo deployment key
+  command: 'cat {{ home }}/.ssh/id_rsa.pub'
+  register: ssh_pubkey
+- name: copy ssh pubkey to local file and pipe it to xclip
+  local_action: copy content='{{ ssh_pubkey.stdout }}' dest=./id_rsa.pub
+- local_action: shell cat ./id_rsa.pub|xclip
+- name: authorize provision user
+  authorized_key:
+    user: '{{ user }}'
+    key: '{{ ssh_pub_key }}'
+- name: disable password authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: sshd reload
+  when: disable_password_auth
+- name: disable root login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  notify: sshd reload
+  when: disable_root_login

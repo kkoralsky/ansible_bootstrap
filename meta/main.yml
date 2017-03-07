@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Karol Ossowski
+  description: creates user, sets sudo and publ. key authentication for him
+  license: BSD
+
+  min_ansible_version: 1.2
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+  - name: Debian
+    versions:
+    - all
+
+  galaxy_tags: [debian, ubuntu, bootstrap]
+
+dependencies: []

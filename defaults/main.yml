@@ -1,0 +1,8 @@
+---
+user: koral
+home: '/home/{{ user }}'
+ssh_pub_key: https://github.com/xkoralsky.keys
+disable_password_auth: true
+disable_root_login: false
+
+run_raw: false
