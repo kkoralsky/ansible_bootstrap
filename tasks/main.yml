@@ -23,7 +23,11 @@
   register: ssh_pubkey
 - name: copy ssh pubkey to local file and pipe it to xclip
   local_action: copy content='{{ ssh_pubkey.stdout }}' dest=./id_rsa.pub
-- local_action: shell cat ./id_rsa.pub|xclip
+- local_action: shell xclip ./id_rsa.pub
+  ignore_errors: yes
+  register: xclip
+- local_action: file name=id_rsa.pub state=absent
+  when: xclip.rc == 0 
 - name: authorize provision user
   authorized_key:
     user: '{{ user }}'
