@@ -1,5 +1,5 @@
 ---
-user: '{{ ansible_user_id }}'
+user: '{{ ansible_user|default(ansible_user_id) }}'
 home: '/home/{{ user }}'
 shell: '/bin/bash'
 
@@ -10,5 +10,5 @@ disable_root_login: false
 
 run_raw: false
 
-sudo_setup: '{{ isnotdocker }}'
-sudo_nopasswd: '{{ isnotdocker }}'
+sudo_setup: yes
+sudo_nopasswd: yes
