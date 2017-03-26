@@ -1,8 +1,14 @@
 ---
-user: koral
+user: '{{ ansible_user_id }}'
 home: '/home/{{ user }}'
+shell: '/bin/bash'
+
 ssh_pub_key: https://github.com/xkoralsky.keys
+
 disable_password_auth: true
 disable_root_login: false
 
 run_raw: false
+
+sudo_setup: '{{ isnotdocker }}'
+sudo_nopasswd: '{{ isnotdocker }}'
