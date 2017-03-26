@@ -12,6 +12,9 @@
     home: '{{ home }}'
     generate_ssh_key: yes
     shell: '{{ shell }}'
+- name: install sudo
+  apt: name=sudo
+  when: sudo_setup
 - name: setup sudo
   template:
     src: sudoers.j2
