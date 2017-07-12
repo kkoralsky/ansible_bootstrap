@@ -3,7 +3,7 @@ user: '{{ ansible_user|default(ansible_user_id) }}'
 home: '/home/{{ user }}'
 shell: '/bin/bash'
 
-ssh_pub_key: https://github.com/xkoralsky.keys
+ssh_pub_key: https://github.com/kkoralsky.keys
 
 disable_password_auth: true
 disable_root_login: false

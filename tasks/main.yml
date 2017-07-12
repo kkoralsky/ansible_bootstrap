@@ -38,6 +38,7 @@
   authorized_key:
     user: '{{ user }}'
     key: '{{ ssh_pub_key }}'
+  when: ssh_pub_key is defined
 - name: disable password authentication
   lineinfile:
     dest: /etc/ssh/sshd_config

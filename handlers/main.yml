@@ -1,3 +1,4 @@
 ---
 - name: reload sshd
   service: name=sshd state=reloaded
+  when: ansible_connection != "docker"
