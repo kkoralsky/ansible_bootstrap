@@ -1,10 +1,9 @@
 ---
-- block:
-  - raw: apt-get update
-  - raw: apt-get install -y python curl
-  ignore_errors: yes
-  tags: ansible_bootstrap
-  when: run_raw
+- include: redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: debian.yml
+  when: ansible_os_family == 'Debian'
 
 - name: create provision user
   user:
@@ -12,9 +11,6 @@
     home: '{{ home }}'
     generate_ssh_key: yes
     shell: '{{ shell }}'
-- name: install sudo
-  apt: name=sudo
-  when: sudo_setup
 - name: setup sudo
   template:
     src: sudoers.j2
@@ -26,19 +22,27 @@
 - name: show ssh public key to add repo deployment key
   command: 'cat {{ home }}/.ssh/id_rsa.pub'
   register: ssh_pubkey
-- debug: msg='{{ ssh_pubkey.stdout }}'
-- name: copy ssh pubkey to local file and pipe it to xclip
-  local_action: copy content='{{ ssh_pubkey.stdout }}' dest=./id_rsa.pub
-- local_action: shell xclip ./id_rsa.pub
-  ignore_errors: yes
-  register: xclip
-- local_action: file name=id_rsa.pub state=absent
-  when: xclip.rc == 0 
+- block:
+  - name: show generated SSH public key
+    debug: msg='{{ ssh_pubkey.stdout }}'
+  - name: copy ssh pubkey to local file and pipe it to xclip
+    local_action: copy content='{{ ssh_pubkey.stdout }}' dest=./id_rsa.pub
+  - local_action: shell xclip ./id_rsa.pub
+    ignore_errors: yes
+    register: xclip
+  - local_action: file name=id_rsa.pub state=absent
+    when: xclip.rc == 0 
+  when: ssh_pubkey is defined and ssh_pubkey.stdout is defined
 - name: authorize provision user
   authorized_key:
     user: '{{ user }}'
     key: '{{ ssh_pub_key }}'
   when: ssh_pub_key is defined
+- name: authorize provision user
+  authorized_key:
+    user: '{{ user }}'
+    key: '{{ lookup("file", ssh_pub_key_file) }}'
+  when: ssh_pub_key_file is defined
 - name: disable password authentication
   lineinfile:
     dest: /etc/ssh/sshd_config
