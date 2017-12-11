@@ -1,5 +1,0 @@
-- block:
-  - raw: apt-get update
-  - raw: apt-get install -y python curl
-  ignore_errors: yes
-  tags: ansible_bootstrap

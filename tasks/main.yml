@@ -11,6 +11,7 @@
     home: '{{ home }}'
     generate_ssh_key: yes
     shell: '{{ shell }}'
+    groups: '{{ user_groups }}'
 - name: setup sudo
   template:
     src: sudoers.j2
