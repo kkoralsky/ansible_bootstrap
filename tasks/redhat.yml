@@ -1,9 +1,0 @@
-- block:
-  - raw: yum update
-  - raw: yum install python
-  tags: ansible_bootstrap
-  when: run_raw
-
-- name: install sudo
-  yum: name=sudo
-  when: sudo_setup

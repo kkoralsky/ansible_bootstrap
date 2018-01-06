@@ -1,9 +1,14 @@
 ---
-- include: redhat.yml
-  when: ansible_os_family == 'RedHat'
+- block:
+  - raw: apt-get update
+  - raw: apt-get install -y python curl
+  ignore_errors: yes
+  tags: ansible_bootstrap
+  when: run_raw
 
-- include: debian.yml
-  when: ansible_os_family == 'Debian'
+- name: install sudo
+  apt: name=sudo
+  when: sudo_setup
 
 - name: create provision user
   user:
