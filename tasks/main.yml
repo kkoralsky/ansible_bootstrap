@@ -6,9 +6,17 @@
   tags: ansible_bootstrap
   when: run_raw
 
+- name: install essential packages
+  apt: name='{{ item }}'
+  with_items: '{{ bootstrap_packages }}'
+
 - name: install sudo
   apt: name=sudo
   when: sudo_setup
+
+- name: create required groups
+  group: name='{{ item }}'
+  with_items: '{{ user_groups }}'
 
 - name: create provision user
   user:
@@ -17,6 +25,11 @@
     generate_ssh_key: yes
     shell: '{{ shell }}'
     groups: '{{ user_groups }}'
+
+- name: set primary group for user
+  user: name='{{ user }}' group='{{ user_groups|first }}'
+  when: user_groups|length > 0
+
 - name: setup sudo
   template:
     src: sudoers.j2

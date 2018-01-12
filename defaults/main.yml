@@ -2,7 +2,7 @@
 user: '{{ ansible_user|default(ansible_user_id) }}'
 home: '/home/{{ user }}'
 shell: '/bin/bash'
-user_groups: [sudo]
+user_groups: []
 
 ssh_pub_key: https://github.com/kkoralsky.keys
 
@@ -13,3 +13,9 @@ run_raw: false
 
 sudo_setup: yes
 sudo_nopasswd: yes
+
+bootstrap_packages:
+  - openssh-client
+  - gnupg
+  - ca-certificates
+  - apt-transport-https
