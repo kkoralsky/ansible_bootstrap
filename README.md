@@ -25,6 +25,7 @@ Role Variables
 
 - `user` - user's username to create
 - `home` - home dir. path; generated with given username by default
+- `user_groups` - set user groups; first is set as primary group
 - `shell` - shell user wil be spawned after login; `/bin/bash` by default
 - `ssh_pub_key` - user public key to use for further authentication
 - `ssh_pub_key_file` - user public key file
