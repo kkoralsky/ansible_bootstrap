@@ -52,12 +52,16 @@
   - local_action: file name=id_rsa.pub state=absent
     when: xclip.rc == 0 
   when: ssh_pubkey is defined and ssh_pubkey.stdout is defined
-- name: authorize provision user
+- name: authorize provision user from current key
+  authorized_key:
+    user: '{{ user }}'
+    key: '{{ ansible_ssh_host_key_rsa_public }}'
+- name: authorize provision user from var
   authorized_key:
     user: '{{ user }}'
     key: '{{ ssh_pub_key }}'
   when: ssh_pub_key is defined
-- name: authorize provision user
+- name: authorize provision user from file
   authorized_key:
     user: '{{ user }}'
     key: '{{ lookup("file", ssh_pub_key_file) }}'
