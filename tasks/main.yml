@@ -7,8 +7,7 @@
   when: run_raw
 
 - name: install essential packages
-  apt: name='{{ item }}'
-  with_items: '{{ bootstrap_packages }}'
+  apt: name='{{ bootstrap_packages }}'
 
 - name: install sudo
   apt: name=sudo
@@ -56,6 +55,7 @@
   authorized_key:
     user: '{{ user }}'
     key: '{{ ansible_ssh_host_key_rsa_public }}'
+  when: ansible_ssh_host_key_rsa_public is defined
 - name: authorize provision user from var
   authorized_key:
     user: '{{ user }}'
