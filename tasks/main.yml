@@ -11,7 +11,7 @@
 
 - name: install sudo
   apt: name=sudo
-  when: sudo_setup
+  when: sudo_setup|bool
 
 - name: create required groups
   group: name='{{ item }}'
@@ -24,6 +24,7 @@
     generate_ssh_key: yes
     shell: '{{ shell }}'
     groups: '{{ user_groups }}'
+    password_lock: '{{ lock_password }}'
 
 - name: set primary group for user
   user: name='{{ user }}' group='{{ user_groups|first }}'
@@ -36,7 +37,8 @@
     owner: root
     group: root
     mode: 0440
-  when: sudo_setup
+  when: sudo_setup|bool
+
 - name: show ssh public key to add repo deployment key
   command: 'cat {{ home }}/.ssh/id_rsa.pub'
   register: ssh_pubkey

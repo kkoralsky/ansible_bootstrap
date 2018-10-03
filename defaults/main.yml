@@ -8,6 +8,7 @@ ssh_pub_key: https://github.com/kkoralsky.keys
 
 disable_password_auth: true
 disable_root_login: false
+lock_password: false
 
 run_raw: false
 
