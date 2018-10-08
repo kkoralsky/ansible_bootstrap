@@ -30,6 +30,12 @@
   user: name='{{ user }}' group='{{ user_groups|first }}'
   when: user_groups|length > 0
 
+- name: set password for the user
+  user:
+    name: '{{ user }}'
+    password: '{{ password|password_hash("sha512", "salty salt") }}'
+  when: password is defined
+
 - name: setup sudo
   template:
     src: sudoers.j2
